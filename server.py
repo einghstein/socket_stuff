@@ -44,6 +44,17 @@ def send_to_everyone(msg, author, exc=None):
         if i != exc:
             send(f"{author}: {msg}",i)
 
+def main():
+    server.listen()
+    print(f"[LISTENNING] at {ADDR}")
+    while True:
+        conn, addr = server.accept()
+        everyone.append(conn)
+        thread = threading.Thread(target=handle_clients, args=(conn, addr))
+        thread.setDaemon(True)
+        thread.start()
+        print(f"[SERVER] New client connected ({threading.active_count() - 2})")
+
 def send(msg,connection):
     message = msg.encode(FORMAT)
     msg_len = len(message)
@@ -53,12 +64,12 @@ def send(msg,connection):
     connection.send(message)
 
 print("[SERVER] Server is starting...")
+thread = threading.Thread(target=main)
+thread.setDaemon(True)
+thread.start()
 
-server.listen()
-print(f"[LISTENNING] at {ADDR}")
+print("[CONSOLE] ready")
 while run:
-    conn, addr = server.accept()
-    everyone.append(conn)
-    thread = threading.Thread(target=handle_clients, args=(conn, addr))
-    thread.start()
-    print(f"[SERVER] New client connected ({threading.active_count() - 1})")
+    command = input()
+    if command == "EXIT":
+            exit()
