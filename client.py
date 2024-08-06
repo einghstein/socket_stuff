@@ -2,7 +2,7 @@ import socket, threading
 
 HEADER = 64
 PORT = 5050
-SERVER = "10.0.0.5" #local ip :D
+SERVER = "10.0.0.5"
 FORMAT = "utf-8"
 DISS = "[DISSCONNECT]"
 ADDR = (SERVER, PORT)
@@ -18,8 +18,25 @@ def send(msg):
     Socket.send(send_len)
     Socket.send(message)
 
-send("hail hitler")
-send("I hate communism")
-send("I need drugs")
+def listen():
+    while True:
+        msg_length = Socket.recv(HEADER).decode(FORMAT)
+        if msg_length:
+            msg_length = int(msg_length)
+        else:
+            break
+        msg = Socket.recv(msg_length).decode(FORMAT)
+        if msg == DISS:
+            break
+        print(msg)
+
+thread = threading.Thread(target=listen)
+thread.start()
+
+while True:
+    inp = input()
+    if inp == "EXIT":
+        break
+    send(inp)
 
 send(DISS)
