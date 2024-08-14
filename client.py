@@ -2,7 +2,7 @@ import socket, threading
 
 HEADER = 64
 PORT = 5050
-SERVER = "10.0.0.5"
+SERVER = input("server address")
 FORMAT = "utf-8"
 DISS = "[DISSCONNECT]"
 ADDR = (SERVER, PORT)
